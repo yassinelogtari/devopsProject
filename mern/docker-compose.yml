@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "5173:5173"
+    networks:
+      - front-network
+  
+  backend:
+    build: ./backend
+    depends_on:
+      - mongo
+    ports:
+      - 5050:5050
+    networks:
+      - back-network
+      - front-network
+  
+  mongo:
+    image: mongo
+    restart : always
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGODB_INITDB_ROOT_USERNAME: mongodb
+      MONGODB_INITDB_ROOT_PASSWORD: mongodb
+    networks:
+      - back-network
+
+networks:
+  front-network:
+  back-network:
+
+
+volumes:
+  mongodb_data:
